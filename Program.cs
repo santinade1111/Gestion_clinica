@@ -4,7 +4,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        while (true)
+        while (true)  
         {
             Console.Clear();
             Console.WriteLine("clinical management");
