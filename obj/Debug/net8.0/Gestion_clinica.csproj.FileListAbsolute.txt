@@ -1,0 +1,15 @@
+/home/Coder/Música/Gestion_clinica/bin/Debug/net8.0/Gestion_clinica
+/home/Coder/Música/Gestion_clinica/bin/Debug/net8.0/Gestion_clinica.deps.json
+/home/Coder/Música/Gestion_clinica/bin/Debug/net8.0/Gestion_clinica.runtimeconfig.json
+/home/Coder/Música/Gestion_clinica/bin/Debug/net8.0/Gestion_clinica.dll
+/home/Coder/Música/Gestion_clinica/bin/Debug/net8.0/Gestion_clinica.pdb
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.GeneratedMSBuildEditorConfig.editorconfig
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.AssemblyInfoInputs.cache
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.AssemblyInfo.cs
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.csproj.CoreCompileInputs.cache
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.sourcelink.json
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.dll
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/refint/Gestion_clinica.dll
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.pdb
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/Gestion_clinica.genruntimeconfig.cache
+/home/Coder/Música/Gestion_clinica/obj/Debug/net8.0/ref/Gestion_clinica.dll
