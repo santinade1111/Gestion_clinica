@@ -155,8 +155,20 @@ namespace Gestion_clinica.service
         }
 
         //Eliminar un paciente
-        public static void RemovePatient(int patientId)
+        public static void RemovePatient()
         {
+            Console.Clear();
+            Console.WriteLine("RemovePatient");
+            int patientId;
+            while (true)
+            {
+                Console.Write("Enter patient ID: ");
+                var idInput = Console.ReadLine();
+                if (int.TryParse(idInput, out patientId))
+                    break;
+                else
+                    Console.WriteLine("Invalid ID. Please enter a valid integer.");
+            }
             if (patientDict.TryGetValue(patientId, out var patient))
             {
                 patients.Remove(patient);

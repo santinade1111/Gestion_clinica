@@ -12,7 +12,8 @@ class Program
             Console.WriteLine("2. See Patients");
             Console.WriteLine("3. Searh Patient");
             Console.WriteLine("4. Add Pet to Patient");
-            Console.WriteLine("5. go out");
+            Console.WriteLine("5. Remove Patient");
+            Console.WriteLine("6. go out");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -29,8 +30,11 @@ class Program
                     break;
                 case "4":
                     GestionPaciente.AddPetToPatient();
-                    break;    
+                    break;
                 case "5":
+                    GestionPaciente.RemovePatient();
+                    break;         
+                case "6":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
