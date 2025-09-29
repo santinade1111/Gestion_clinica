@@ -182,10 +182,30 @@ namespace Gestion_clinica.service
         }
 
         //Modificar el nombre de un paciente
-        public static void UpdatePatientName(int patientId, string newName)
+        public static void UpdatePatientName(string newName = "Updated Name")
         {
+            Console.Clear();
+            Console.WriteLine("Name Patient Update");
+            int patientId;
+            while (true)
+            {
+                Console.Write("Enter patient ID: ");
+                var idInput = Console.ReadLine();
+                if (int.TryParse(idInput, out patientId))
+                    break;
+                else
+                    Console.WriteLine("Invalid ID. Please enter a valid integer.");
+            }
             if (patientDict.TryGetValue(patientId, out var patient))
             {
+                Console.WriteLine("enter the new name:");
+                newName = Console.ReadLine() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(newName))
+                {
+                    Console.WriteLine("Name cannot be empty. Press Enter to continue...");
+                    Console.ReadKey();
+                    return;
+                }
                 patient.Name = newName;
                 Console.WriteLine($"Patient name updated to {newName}.");
             }
@@ -197,6 +217,7 @@ namespace Gestion_clinica.service
             Console.ReadKey();
         }
 
+        //Buscar un paciente por nombre
         public static void SearhPatient()
         {
             Console.Clear();
