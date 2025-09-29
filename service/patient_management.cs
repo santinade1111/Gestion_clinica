@@ -104,21 +104,57 @@ namespace Gestion_clinica.service
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
-        // Ejemplo: Agregar una mascota a un paciente
-        public static void AddPetToPatient(int patientId, string petName, string petSpecies)
+        //Agregar una mascota a un paciente
+        public static void AddPetToPatient()
         {
-            if (patientDict.TryGetValue(patientId, out var patient))
+            Console.Clear();
+            Console.WriteLine("Add Pet to Patient");
+            int patientId;
+            while (true)
             {
-                patient.Pets.Add(new Pet(petName, petSpecies));
-                Console.WriteLine($"Pet '{petName}' added to patient {patient.Name}.");
+                Console.Write("Enter patient ID: ");
+                var idInput = Console.ReadLine();
+                if (int.TryParse(idInput, out patientId))
+                    break;
+                else
+                    Console.WriteLine("Invalid ID. Please enter a valid integer.");
             }
-            else
+
+            if (!patientDict.TryGetValue(patientId, out var patient))
             {
-                Console.WriteLine("Patient not found.");
+                Console.WriteLine("Patient not found. Press Enter to continue...");
+                Console.ReadKey();
+                return;
             }
+
+            string petName;
+            while (true)
+            {
+                Console.Write("Pet name: ");
+                petName = Console.ReadLine() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(petName))
+                    break;
+                else
+                    Console.WriteLine("Pet name cannot be empty.");
+            }
+
+            string petSpecies;
+            while (true)
+            {
+                Console.Write("Pet species: ");
+                petSpecies = Console.ReadLine() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(petSpecies))
+                    break;
+                else
+                    Console.WriteLine("Pet species cannot be empty.");
+            }
+
+            patient.Pets.Add(new Pet(petName, petSpecies));
+            Console.WriteLine($"Pet '{petName}' added to patient {patient.Name}. Press Enter to continue...");
+            Console.ReadKey();
         }
 
-        // Ejemplo: Eliminar un paciente
+        //Eliminar un paciente
         public static void RemovePatient(int patientId)
         {
             if (patientDict.TryGetValue(patientId, out var patient))
@@ -133,7 +169,7 @@ namespace Gestion_clinica.service
             }
         }
 
-        // Ejemplo: Modificar el nombre de un paciente
+        //Modificar el nombre de un paciente
         public static void UpdatePatientName(int patientId, string newName)
         {
             if (patientDict.TryGetValue(patientId, out var patient))
@@ -172,7 +208,7 @@ namespace Gestion_clinica.service
             {
                 foreach (var patient in found)
                 {
-                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}");
+                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}, Pets: {patient.Pets.Count}");
                 }
             }
             Console.WriteLine("Press Enter to continue...");
