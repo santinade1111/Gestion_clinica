@@ -2,14 +2,27 @@ namespace Gestion_clinica.service
 {
     public class GestionPaciente
     {
-        // Lista de pacientes
+        // list of patients
         public static List<Patient> patients = new List<Patient>();
-        // Diccionario para acceso rápido por ID
+        // dicctionary for quick access by ID
         public static Dictionary<int, Patient> patientDict = new Dictionary<int, Patient>();
         public static int nextId = 1;
 
+        // Filter patients by minimum age
+        public static void FilterPatientsByAge(int minAge)
+        {
+            var filtered = patients.Where(p => p.Age >= minAge).ToList();
+            Console.Clear();
+            if (filtered.Count == 0)
+                Console.WriteLine("No patients found.");
+            else
+                foreach (var patient in filtered)
+                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
 
-
+        // Register a new patient
         public static void RegisterPatient()
         {
             Console.Clear();
@@ -104,7 +117,7 @@ namespace Gestion_clinica.service
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
-        //Agregar una mascota a un paciente
+        // Adding a pet to a patient
         public static void AddPetToPatient()
         {
             Console.Clear();
@@ -154,7 +167,7 @@ namespace Gestion_clinica.service
             Console.ReadKey();
         }
 
-        //Eliminar un paciente
+        // Delete a patient
         public static void RemovePatient()
         {
             Console.Clear();
@@ -181,7 +194,7 @@ namespace Gestion_clinica.service
             }
         }
 
-        //Modificar el nombre de un paciente
+        // Modify a patient name
         public static void UpdatePatientName(string newName = "Updated Name")
         {
             Console.Clear();
@@ -217,7 +230,7 @@ namespace Gestion_clinica.service
             Console.ReadKey();
         }
 
-        //Buscar un paciente por nombre
+        // Search for a patient by name
         public static void SearhPatient()
         {
             Console.Clear();

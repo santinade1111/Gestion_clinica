@@ -4,7 +4,8 @@ class Program
 {
     static void Main(string[] args)
     {
-        while (true)  
+        // Main menu loop
+        while (true)
         {
             Console.Clear();
             Console.WriteLine("clinical management");
@@ -14,7 +15,8 @@ class Program
             Console.WriteLine("4. Add Pet to Patient");
             Console.WriteLine("5. Remove Patient");
             Console.WriteLine("6. Update Patient Name");
-            Console.WriteLine("7. go out");
+            Console.WriteLine("7. Filter Patients by Age");
+            Console.WriteLine("8. go out");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -37,8 +39,16 @@ class Program
                     break;
                 case "6":
                     GestionPaciente.UpdatePatientName();
-                    break;             
+                    break;
                 case "7":
+                    Console.Write("Enter minimum age: ");
+                    if (int.TryParse(Console.ReadLine(), out int minAge))
+                        GestionPaciente.FilterPatientsByAge(minAge);
+                    else
+                        Console.WriteLine("Invalid age. Press Enter to continue...");
+                    Console.ReadLine();
+                    break;
+                case "8":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
