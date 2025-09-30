@@ -2,11 +2,50 @@ namespace Gestion_clinica.service
 {
     public class GestionPaciente
     {
-        // list of patients
+        // Lista de pacientes
         public static List<Patient> patients = new List<Patient>();
-        // dicctionary for quick access by ID
+        // Diccionario para acceso rápido por ID
         public static Dictionary<int, Patient> patientDict = new Dictionary<int, Patient>();
         public static int nextId = 1;
+
+        // Agrupar pacientes por especie de mascota
+        public static void GroupPatientsByPetSpecies()
+        {
+            Console.Clear();
+            var grupos = patients
+                .SelectMany(p => p.Pets, (p, pet) => new { Paciente = p, Especie = pet.Species })
+                .GroupBy(x => x.Especie);
+
+            if (!grupos.Any())
+            {
+                Console.WriteLine("No patients with pets found.");
+            }
+            else
+            {
+                foreach (var grupo in grupos)
+                {
+                    Console.WriteLine($"Especie: {grupo.Key}");
+                    foreach (var x in grupo)
+                    {
+                        Console.WriteLine($"  Paciente: {x.Paciente.Name} (ID: {x.Paciente.Id})");
+                    }
+                }
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+        // Order patients by name
+        public static void OrderPatientsByName(bool descending = false)
+        {
+            var ordered = descending ? patients.OrderByDescending(p => p.Name).ToList() : patients.OrderBy(p => p.Name).ToList();
+            Console.Clear();
+            Console.WriteLine(descending ? "Patients ordered by name (descending):" : "Patients ordered by name (ascending):");
+            foreach (var patient in ordered)
+                Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
 
         // Filter patients by minimum age
         public static void FilterPatientsByAge(int minAge)
