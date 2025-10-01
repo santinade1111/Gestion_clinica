@@ -2,19 +2,113 @@ namespace Gestion_clinica.service
 {
     public class GestionPaciente
     {
-        // Lista de pacientes
+        // List to store patients
         public static List<Patient> patients = new List<Patient>();
-        // Diccionario para acceso rápido por ID
+        // Dictionary for quick access by ID
         public static Dictionary<int, Patient> patientDict = new Dictionary<int, Patient>();
         public static int nextId = 1;
 
-        // Agrupar pacientes por especie de mascota
+        // List patient names in uppercase and sorted
+        public static void ListPatientNamesUppercaseSorted()
+        {
+            Console.Clear();
+            var names = patients.Select(p => p.Name.ToUpper()).OrderBy(n => n).ToList();
+            if (names.Count == 0)
+            {
+                Console.WriteLine("There are no registered patients.");
+            }
+            else
+            {
+                Console.WriteLine("Patient names in uppercase, sorted:");
+                foreach (var name in names)
+                {
+                    Console.WriteLine(name);
+                }
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+        // Check if any patient has a pet without a defined species
+        public static void CheckPatientWithPetWithoutSpecies()
+        {
+            Console.Clear();
+            bool exist = patients.Any(p => p.Pets.Any(pet => string.IsNullOrWhiteSpace(pet.Species)));
+            if (exist)
+                Console.WriteLine("There is at least one patient with a pet of undefined species.");
+            else
+                Console.WriteLine("There are no patients with pets without a defined species.");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+        // Count pets by species
+        public static void CountPetsBySpecies()
+        {
+            Console.Clear();
+            var conteo = patients
+                .SelectMany(p => p.Pets)
+                .GroupBy(pet => pet.Species)
+                .Select(g => new { Specie = g.Key, Amount = g.Count() });
+
+            if (!conteo.Any())
+            {
+                Console.WriteLine("No pets found.");
+            }
+            else
+            {
+                Console.WriteLine("number of pets by species:");
+                foreach (var c in conteo)
+                {
+                    Console.WriteLine($"{c.Specie}: {c.Amount}");
+                }
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+        // Show the youngest patient
+        public static void ShowYoungestPatient()
+        {
+            Console.Clear();
+            var patientYoungest = patients.OrderBy(p => p.Age).FirstOrDefault();
+            if (patientYoungest == null)
+            {
+                Console.WriteLine("No patients found.");
+            }
+            else
+            {
+                Console.WriteLine($"Patient youngest: ID: {patientYoungest.Id}, Name: {patientYoungest.Name}, Age: {patientYoungest.Age}, Phone: {patientYoungest.Phone}");
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+        // Show patients with dogs ordered by age
+        public static void ShowDogOwnersOrderedByAge()
+        {
+            Console.Clear();
+            var resultado = patients
+                .Where(p => p.Pets.Any(m => m.Species.Equals("Dog", StringComparison.OrdinalIgnoreCase)))
+                .OrderBy(p => p.Age)
+                .Select(p => new { p.Name, p.Phone });
+
+            Console.WriteLine("Pet owners sorted by age:");
+            foreach (var r in resultado)
+            {
+                Console.WriteLine($"Name: {r.Name}, Phone: {r.Phone}");
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+        // Group patients by pet species
         public static void GroupPatientsByPetSpecies()
         {
             Console.Clear();
             var grupos = patients
-                .SelectMany(p => p.Pets, (p, pet) => new { Paciente = p, Especie = pet.Species })
-                .GroupBy(x => x.Especie);
+                .SelectMany(p => p.Pets, (p, pet) => new { Patient = p, Species = pet.Species })
+                .GroupBy(x => x.Species);
 
             if (!grupos.Any())
             {
@@ -24,10 +118,10 @@ namespace Gestion_clinica.service
             {
                 foreach (var grupo in grupos)
                 {
-                    Console.WriteLine($"Especie: {grupo.Key}");
+                    Console.WriteLine($"species: {grupo.Key}");
                     foreach (var x in grupo)
                     {
-                        Console.WriteLine($"  Paciente: {x.Paciente.Name} (ID: {x.Paciente.Id})");
+                        Console.WriteLine($"  Patient: {x.Patient.Name} (ID: {x.Patient.Id})");
                     }
                 }
             }
@@ -116,7 +210,22 @@ namespace Gestion_clinica.service
                     }
                 }
 
-                var patient = new Patient(nextId++, name, age, symptom);
+                int phone;
+                while (true)
+                {
+                    Console.Write("Phone patient: ");
+                    var phoneInput = Console.ReadLine();
+                    if (int.TryParse(phoneInput, out phone))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid phone number. Please enter a valid integer.");
+                    }
+                }
+
+                var patient = new Patient(nextId++, name, age, symptom, phone);
                 patients.Add(patient);
                 patientDict[patient.Id] = patient;
                 Console.WriteLine("Patient successfully registered. Press Enter to continue....");

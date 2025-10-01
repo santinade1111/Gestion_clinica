@@ -4,14 +4,17 @@ public class Patient
     public string Name { get; set; }
     public int Age { get; set; }
     public string Symptom { get; set; }
+
+    public int Phone { get; set; }
     public List<Pet> Pets { get; set; }
 
-    public Patient(int id, string name, int age, string symptom)
+    public Patient(int id, string name, int age, string symptom , int phone)
     {
         Id = id;
         Name = name;
         Age = age;
         Symptom = symptom;
+        Phone = phone;
         Pets = new List<Pet>();
     }
 }
