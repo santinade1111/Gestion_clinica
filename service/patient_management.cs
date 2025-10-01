@@ -225,7 +225,22 @@ namespace Gestion_clinica.service
                     }
                 }
 
-                var patient = new Patient(nextId++, name, age, symptom, phone);
+                string address;
+                while (true)
+                {
+                    Console.Write("Address: ");
+                    address = Console.ReadLine() ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(address))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Address cannot be empty. Please enter a valid address.");
+                    }
+                }
+
+                var patient = new Patient(nextId++, name, age, symptom, phone, address);
                 patients.Add(patient);
                 patientDict[patient.Id] = patient;
                 Console.WriteLine("Patient successfully registered. Press Enter to continue....");
