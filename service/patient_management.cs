@@ -1,3 +1,5 @@
+using Gestion_clinica.models;
+using Gestion_clinica.Interfaces;
 namespace Gestion_clinica.service
 {
     public class GestionPaciente
@@ -33,7 +35,7 @@ namespace Gestion_clinica.service
         public static void CheckPatientWithPetWithoutSpecies()
         {
             Console.Clear();
-            bool exist = patients.Any(p => p.Pets.Any(pet => string.IsNullOrWhiteSpace(pet.Species)));
+            bool exist = patients.Any(p => p.Pets.Any(pet => string.IsNullOrWhiteSpace(pet.Specie)));
             if (exist)
                 Console.WriteLine("There is at least one patient with a pet of undefined species.");
             else
@@ -48,7 +50,7 @@ namespace Gestion_clinica.service
             Console.Clear();
             var conteo = patients
                 .SelectMany(p => p.Pets)
-                .GroupBy(pet => pet.Species)
+                .GroupBy(pet => pet.Specie)
                 .Select(g => new { Specie = g.Key, Amount = g.Count() });
 
             if (!conteo.Any())
@@ -89,7 +91,7 @@ namespace Gestion_clinica.service
         {
             Console.Clear();
             var resultado = patients
-                .Where(p => p.Pets.Any(m => m.Species.Equals("Dog", StringComparison.OrdinalIgnoreCase)))
+                .Where(p => p.Pets.Any(m => m.Specie.Equals("Dog", StringComparison.OrdinalIgnoreCase)))
                 .OrderBy(p => p.Age)
                 .Select(p => new { p.Name, p.Phone });
 
@@ -107,7 +109,7 @@ namespace Gestion_clinica.service
         {
             Console.Clear();
             var grupos = patients
-                .SelectMany(p => p.Pets, (p, pet) => new { Patient = p, Species = pet.Species })
+                .SelectMany(p => p.Pets, (p, pet) => new { Patient = p, Species = pet.Specie })
                 .GroupBy(x => x.Species);
 
             if (!grupos.Any())
@@ -254,6 +256,7 @@ namespace Gestion_clinica.service
             }
         }
 
+        // View all patients
         public static void SeePatients()
         {
             Console.Clear();
@@ -272,7 +275,7 @@ namespace Gestion_clinica.service
                         Console.WriteLine("  Pets:");
                         foreach (var pet in patient.Pets)
                         {
-                            Console.WriteLine($"    - {pet.Name} ({pet.Species})");
+                            Console.WriteLine($"    - {pet.Name} ({pet.Specie})");
                         }
                     }
                 }
@@ -280,6 +283,7 @@ namespace Gestion_clinica.service
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
+
         // Adding a pet to a patient
         public static void AddPetToPatient()
         {
@@ -314,19 +318,60 @@ namespace Gestion_clinica.service
                     Console.WriteLine("Pet name cannot be empty.");
             }
 
-            string petSpecies;
+            int petAge;
             while (true)
             {
-                Console.Write("Pet species: ");
-                petSpecies = Console.ReadLine() ?? string.Empty;
-                if (!string.IsNullOrWhiteSpace(petSpecies))
+                Console.Write("Pet age: ");
+                var petAgeInput = Console.ReadLine();
+                if (int.TryParse(petAgeInput, out petAge))
+                {
                     break;
+                }
                 else
-                    Console.WriteLine("Pet species cannot be empty.");
+                {
+                    Console.WriteLine("Invalid age. Please enter a valid integer.");
+                }
             }
 
-            patient.Pets.Add(new Pet(petName, petSpecies));
-            Console.WriteLine($"Pet '{petName}' added to patient {patient.Name}. Press Enter to continue...");
+            string petSpecie;
+            while (true)
+            {
+                Console.Write("Pet specie: ");
+                petSpecie = Console.ReadLine() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(petSpecie))
+                    break;
+                else
+                    Console.WriteLine("Pet specie cannot be empty.");
+            }
+
+            string petRace;
+            while (true)
+            {
+                Console.Write("Pet race: ");
+                petRace = Console.ReadLine() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(petRace))
+                    break;
+                else
+                    Console.WriteLine("Pet race cannot be empty.");
+            }
+
+            string petOwner;
+            while (true)
+            {
+                Console.Write("Pet owner: ");
+                petOwner = Console.ReadLine() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(petOwner))
+                    break;
+                else
+                    Console.WriteLine("Pet owner cannot be empty.");
+            }
+
+            var pet = new Pet(petName, petAge, petSpecie, petRace, petOwner);
+            patient.Pets.Add(pet);
+            Console.WriteLine($"Pet '{petName}' added to patient {patient.Name}.");
+            Console.WriteLine("Sound:");
+            pet.MakeSound();
+            Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
 
