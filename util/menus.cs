@@ -38,7 +38,7 @@ class Menus
                     break;
                 case "6":
                     GestionPaciente.UpdatePatientName();
-                    break;
+                    break;   
                 case "7":
                     return;
                 default:

@@ -1,15 +1,8 @@
-public class Animal
+public abstract class Animal
 {
-    public string Name { get; set; }
-    public int Age { get; set; }
-    public string Specie { get; set; }
-
-    public Animal(string name, int age, string specie)
-    {
-        Name = name;
-        Age = age;
-        Specie = specie;
-    }
+    public string Name { get; set; } = string.Empty;
+    public int Age { get; set; } = 0;
+    public string Specie { get; set; } = string.Empty;
 
     public virtual void MakeSound()
     {

@@ -1,7 +1,7 @@
 using Gestion_clinica.Interfaces;
 namespace Gestion_clinica.models
 {
-    public class Patient : IRegistrable
+    public class Patient : IRegistrable<Patient>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -23,9 +23,9 @@ namespace Gestion_clinica.models
             Pets = new List<Pet>();
         }
 
-        public void Register()
+        public void Register(Patient patient)
         {
-            Console.WriteLine($"Patient registered: {Name}, Age: {Age}, Phone: {Phone}, Address: {Address}");
+            Console.WriteLine($"Patient registered: {patient.Name}, Age: {patient.Age}, Phone: {patient.Phone}, Address: {patient.Address}");
         }
 
         public int Phone

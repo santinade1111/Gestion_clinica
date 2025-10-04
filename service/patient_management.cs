@@ -245,7 +245,9 @@ namespace Gestion_clinica.service
                 var patient = new Patient(nextId++, name, age, symptom, phone, address);
                 patients.Add(patient);
                 patientDict[patient.Id] = patient;
+                // Invoca el método Register de la interfaz
                 Console.WriteLine("Patient successfully registered. Press Enter to continue....");
+                patient.Register(patient);
                 Console.ReadKey();
             }
             catch (Exception ex)
@@ -256,7 +258,7 @@ namespace Gestion_clinica.service
             }
         }
 
-        // View all patients
+        // View all patients 
         public static void SeePatients()
         {
             Console.Clear();
@@ -368,9 +370,11 @@ namespace Gestion_clinica.service
 
             var pet = new Pet(petName, petAge, petSpecie, petRace, petOwner);
             patient.Pets.Add(pet);
-            Console.WriteLine($"Pet '{petName}' added to patient {patient.Name}.");
+            // Invoca el método Register de la interfaz
             Console.WriteLine("Sound:");
             pet.MakeSound();
+            Console.WriteLine($"Pet '{petName}' added to patient {patient.Name}.");
+            pet.Register(pet);
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }

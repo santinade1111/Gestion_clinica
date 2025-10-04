@@ -1,21 +1,20 @@
 using Gestion_clinica.models;
 namespace Gestion_clinica.Interfaces
 {
-    public class Pet : Animal, IRegistrable
+    public class Pet : Animal, IRegistrable<Pet>
     {
         public string Race { get; set; }
         public string Owner { get; set; }
 
         public Pet(string name, int age, string specie, string race, string owner)
-            : base(name, age, specie)
         {
             Race = race;
             Owner = owner;
         }
 
-        public void Register()
+        public void Register(Pet pet)
         {
-            Console.WriteLine($"Pet registered: {Name}, Age: {Age}, Specie: {Specie}, Race: {Race}, Owner: {Owner}");
+            Console.WriteLine($"Pet registered: {pet.Name}, Age: {pet.Age}, Specie: {pet.Specie}, Race: {pet.Race}, Owner: {pet.Owner}");
         }
 
         public override void MakeSound()
