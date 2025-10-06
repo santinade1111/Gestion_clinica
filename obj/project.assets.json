@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/Coder/.nuget/packages/": {}
+    "C:\\Users\\MELANY\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/Coder/Música/Gestion_clinica/Gestion_clinica.csproj",
+      "projectUniqueName": "C:\\Users\\MELANY\\Documents\\Gestion_clinica\\Gestion_clinica.csproj",
       "projectName": "Gestion_clinica",
-      "projectPath": "/home/Coder/Música/Gestion_clinica/Gestion_clinica.csproj",
-      "packagesPath": "/home/Coder/.nuget/packages/",
-      "outputPath": "/home/Coder/Música/Gestion_clinica/obj/",
+      "projectPath": "C:\\Users\\MELANY\\Documents\\Gestion_clinica\\Gestion_clinica.csproj",
+      "packagesPath": "C:\\Users\\MELANY\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\MELANY\\Documents\\Gestion_clinica\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/Coder/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\MELANY\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -38,6 +38,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -59,7 +64,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.119/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.414/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

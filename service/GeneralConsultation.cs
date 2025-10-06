@@ -1,6 +1,7 @@
 using System;
+using Gestion_clinica;
 
-namespace Gestion_clinica
+namespace Gestion_clinica.service
 {
     public class GeneralConsultation : ServiceVeterinary
     {
@@ -8,13 +9,12 @@ namespace Gestion_clinica
         {
             Console.WriteLine("Attending general consultation...");
         }
-    }
 
-    public class Vaccination : ServiceVeterinary
-    {
-        public override void Attend()
+
+    public static void GeneralConsultationMethod()
         {
-            Console.WriteLine("Applying vaccination...");
+            var consulta = new GeneralConsultation();
+            consulta.Attend();
         }
     }
 }

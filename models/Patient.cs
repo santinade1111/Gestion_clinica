@@ -7,7 +7,6 @@ namespace Gestion_clinica.models
         public string Name { get; set; }
         public int Age { get; set; }
         public string Symptom { get; set; }
-
         private int phone;
         public string Address { get; set; }
         public List<Pet> Pets { get; set; }

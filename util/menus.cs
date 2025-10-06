@@ -9,18 +9,50 @@ class Menus
         {
             Console.Clear();
             Console.WriteLine("clinical management");
-            Console.WriteLine("1. Register Patient");
-            Console.WriteLine("2. See Patients");
-            Console.WriteLine("3. Searh Patient");
-            Console.WriteLine("4. Add Pet to Patient");
-            Console.WriteLine("5. Remove Patient");
-            Console.WriteLine("6. Update Patient Name");
-            Console.WriteLine("7. go out");
+            Console.WriteLine("1.Patient");
+            Console.WriteLine("2.Pets");
+            Console.WriteLine("3.General Consultation");
+            Console.WriteLine("4.go out");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
             switch (opcion)
             {
+                case "1":
+                    PatientMenu();
+                    break;
+                case "2":
+                    PetsMenu();
+                    break;
+                case "3":
+                    GeneralConsultation.GeneralConsultationMethod();
+                    break; 
+                case "4":
+                    return;
+                default:
+                    Console.WriteLine("Invalid option. Press Enter to continue....");
+                    Console.ReadLine();
+                    break;
+            }
+        }
+    }
+
+    public static void PatientMenu()
+    {
+        while(true)
+        {
+            Console.WriteLine("1. Register Patient");
+            Console.WriteLine("2. See patients");
+            Console.WriteLine("3. Search patient");
+            Console.WriteLine("4. Remove Patient");
+            Console.WriteLine("5. go out");
+            Console.Write("Select an option: ");
+            var opcion = Console.ReadLine();
+
+            switch (opcion)
+            {
+            
+            
                 case "1":
                     GestionPaciente.RegisterPatient();
                     break;
@@ -31,16 +63,34 @@ class Menus
                     GestionPaciente.SearhPatient();
                     break;
                 case "4":
-                    GestionPaciente.AddPetToPatient();
-                    break;
-                case "5":
                     GestionPaciente.RemovePatient();
-                    break;
-                case "6":
-                    GestionPaciente.UpdatePatientName();
-                    break;   
-                case "7":
-                    return;
+                    break;  
+                case "5":
+                    return;   
+                default:
+                    Console.WriteLine("Invalid option. Press Enter to continue....");
+                    Console.ReadLine();
+                    break;       
+            }
+        }
+    }
+
+    public static void PetsMenu()
+    {
+        while(true)
+        {
+            Console.WriteLine("1. Add Pet to Patient");
+            Console.WriteLine("2. salir");
+            Console.Write("Select an option: ");
+            var opcion = Console.ReadLine();
+
+            switch(opcion)
+            {
+                case "1":
+                    GestionPaciente.AddPetToPatient();
+                    break;  
+                case "2":
+                    return;   
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
                     Console.ReadLine();
