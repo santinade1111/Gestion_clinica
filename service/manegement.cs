@@ -375,7 +375,7 @@ namespace Gestion_clinica.service
                     patient.EnviarNotificacion($"Reminder for {appointment.Date:dd/MM/yyyy HH:mm}");
                 }
             }
-            Console.WriteLine("Press Enter to continue...");
+            Console.WriteLine("Press Enter to continue..");
             Console.ReadKey();
         }
     }
