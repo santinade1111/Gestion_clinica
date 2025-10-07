@@ -8,7 +8,7 @@ class Menus
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("clinical management");
+            Console.WriteLine(" --------- CLINICAL MANAGEMENT --------");
             Console.WriteLine("1.Patient Consultation");
             Console.WriteLine("2.Pets Consultation");
             Console.WriteLine("3.General Consultation");
@@ -25,8 +25,8 @@ class Menus
                     PetsMenu();
                     break;
                 case "3":
-                    GeneralConsultation.GeneralConsultationMethod();
-                    break; 
+                    GeneralConsultationMenu();
+                    break;
                 case "4":
                     return;
                 default:
@@ -39,14 +39,14 @@ class Menus
 
     public static void PatientMenu()
     {
-        while(true)
+        while (true)
         {
+            Console.WriteLine("1. -------- PATIENT MENU -------");
             Console.WriteLine("1. Register Patient");
             Console.WriteLine("2. See patients");
             Console.WriteLine("3. Search patient");
             Console.WriteLine("4. Remove Patient");
-            Console.WriteLine("5. Schedule appointment");
-            Console.WriteLine("6. go out");
+            Console.WriteLine("5. go out");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -65,9 +65,6 @@ class Menus
                     GestionPaciente.RemovePatient();
                     break;
                 case "5":
-                    GestionPaciente.AgendarCitaPaciente();
-                    break;
-                case "6":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
@@ -79,28 +76,57 @@ class Menus
 
     public static void PetsMenu()
     {
-        while(true)
+        while (true)
         {
+            Console.WriteLine(" ------- PETS MENU --------");
             Console.WriteLine("1. Add Pet to Patient");
             Console.WriteLine("2. Vaccianation");
             Console.WriteLine("3. salir");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
-            switch(opcion)
+            switch (opcion)
             {
                 case "1":
                     GestionPaciente.AddPetToPatient();
                     break;
                 case "2":
                     Vaccination.VaccinationMethod();
-                    break;      
+                    break;
                 case "3":
-                    return;   
+                    return;
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
                     Console.ReadLine();
                     break;
+            }
+        }
+    }
+
+    public static void GeneralConsultationMenu()
+    {
+        while (true)
+        {
+            Console.WriteLine("-------- GENERAL CONSULTATION --------");
+            Console.WriteLine("1. Schedule appointment");
+            Console.WriteLine("2. salir");
+            Console.Write("Select an option: ");
+            var opcion = Console.ReadLine();
+
+
+            switch (opcion)
+            {
+                case "1":
+                    GestionPaciente.AgendarCitaPaciente();
+                    break;
+                case "2":
+                    return;
+                default:
+                    Console.WriteLine("Invalid option. Press Enter to continue....");
+                    Console.ReadLine();
+                    break;
+
+
             }
         }
     }

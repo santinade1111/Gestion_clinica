@@ -8,6 +8,8 @@ namespace Gestion_clinica.service
         public override void Attend()
         {
             Console.WriteLine("Attending general consultation...");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
         }
 
     public static void GeneralConsultationMethod()
