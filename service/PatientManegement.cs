@@ -1,14 +1,20 @@
 using Gestion_clinica.models;
 using Gestion_clinica.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 namespace Gestion_clinica.service
 {
     public class GestionPaciente
     {
+        // Método para agendar cita a un paciente
+
         // List to store patients
         public static List<Patient> patients = new List<Patient>();
         // Dictionary for quick access by ID
         public static Dictionary<int, Patient> patientDict = new Dictionary<int, Patient>();
         public static int nextId = 1;
+
 
         // List patient names in uppercase and sorted
         public static void ListPatientNamesUppercaseSorted()
@@ -138,7 +144,7 @@ namespace Gestion_clinica.service
             Console.Clear();
             Console.WriteLine(descending ? "Patients ordered by name (descending):" : "Patients ordered by name (ascending):");
             foreach (var patient in ordered)
-                Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}");
+                Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}");
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
@@ -152,7 +158,7 @@ namespace Gestion_clinica.service
                 Console.WriteLine("No patients found.");
             else
                 foreach (var patient in filtered)
-                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}");
+                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}");
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
@@ -196,22 +202,6 @@ namespace Gestion_clinica.service
                     }
                 }
 
-
-                string symptom;
-                while (true)
-                {
-                    Console.Write("Symptom: ");
-                    symptom = Console.ReadLine() ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(symptom))
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Symptom cannot be empty. Please enter a valid symptom.");
-                    }
-                }
-
                 int phone;
                 while (true)
                 {
@@ -242,7 +232,7 @@ namespace Gestion_clinica.service
                     }
                 }
 
-                var patient = new Patient(nextId++, name, age, symptom, phone, address);
+                var patient = new Patient(nextId++, name, age, phone, address);
                 patients.Add(patient);
                 patientDict[patient.Id] = patient;
                 // Invoca el método Register de la interfaz
@@ -271,13 +261,13 @@ namespace Gestion_clinica.service
             {
                 foreach (var patient in patients)
                 {
-                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}");
+                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}");
                     if (patient.Pets.Count > 0)
                     {
                         Console.WriteLine("  Pets:");
                         foreach (var pet in patient.Pets)
                         {
-                            Console.WriteLine($"    - {pet.Name} ({pet.Specie})");
+                            Console.WriteLine($"{pet.Name} ({pet.Specie})");
                         }
                     }
                 }
@@ -466,10 +456,42 @@ namespace Gestion_clinica.service
             {
                 foreach (var patient in found)
                 {
-                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Symptom: {patient.Symptom}, Pets: {patient.Pets.Count}");
+                    Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Pets: {patient.Pets.Count}");
                 }
             }
             Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+        
+        // schedule appointment
+        public static void AgendarCitaPaciente()
+        {
+            Console.Clear();
+            Console.WriteLine("Agendar cita para paciente");
+            Console.Write("Ingrese el ID del paciente: ");
+            var idInput = Console.ReadLine();
+            if (!int.TryParse(idInput, out int patientId))
+            {
+                Console.WriteLine("ID inválido. Presione Enter para continuar...");
+                Console.ReadKey();
+                return;
+            }
+            if (!patientDict.TryGetValue(patientId, out var patient))
+            {
+                Console.WriteLine("Paciente no encontrado. Presione Enter para continuar...");
+                Console.ReadKey();
+                return;
+            }
+            Console.Write("Ingrese la fecha y hora de la cita (formato: dd/MM/yyyy HH:mm): ");
+            var fechaInput = Console.ReadLine();
+            if (!DateTime.TryParseExact(fechaInput, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime fecha))
+            {
+                Console.WriteLine("Fecha inválida. Presione Enter para continuar...");
+                Console.ReadKey();
+                return;
+            }
+            patient.AgendarCita(fecha);
+            Console.WriteLine("Presione Enter para continuar...");
             Console.ReadKey();
         }
     }

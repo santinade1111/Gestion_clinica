@@ -8,6 +8,9 @@ namespace Gestion_clinica.Interfaces
 
         public Pet(string name, int age, string specie, string race, string owner)
         {
+            Name = name;
+            Age = age;
+            Specie = specie;
             Race = race;
             Owner = owner;
         }

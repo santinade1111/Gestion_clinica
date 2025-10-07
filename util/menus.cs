@@ -9,8 +9,8 @@ class Menus
         {
             Console.Clear();
             Console.WriteLine("clinical management");
-            Console.WriteLine("1.Patient");
-            Console.WriteLine("2.Pets");
+            Console.WriteLine("1.Patient Consultation");
+            Console.WriteLine("2.Pets Consultation");
             Console.WriteLine("3.General Consultation");
             Console.WriteLine("4.go out");
             Console.Write("Select an option: ");
@@ -45,14 +45,13 @@ class Menus
             Console.WriteLine("2. See patients");
             Console.WriteLine("3. Search patient");
             Console.WriteLine("4. Remove Patient");
-            Console.WriteLine("5. go out");
+            Console.WriteLine("5. Schedule appointment");
+            Console.WriteLine("6. go out");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
             switch (opcion)
             {
-            
-            
                 case "1":
                     GestionPaciente.RegisterPatient();
                     break;
@@ -64,13 +63,16 @@ class Menus
                     break;
                 case "4":
                     GestionPaciente.RemovePatient();
-                    break;  
+                    break;
                 case "5":
-                    return;   
+                    GestionPaciente.AgendarCitaPaciente();
+                    break;
+                case "6":
+                    return;
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
                     Console.ReadLine();
-                    break;       
+                    break;
             }
         }
     }
@@ -80,7 +82,8 @@ class Menus
         while(true)
         {
             Console.WriteLine("1. Add Pet to Patient");
-            Console.WriteLine("2. salir");
+            Console.WriteLine("2. Vaccianation");
+            Console.WriteLine("3. salir");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -88,8 +91,11 @@ class Menus
             {
                 case "1":
                     GestionPaciente.AddPetToPatient();
-                    break;  
+                    break;
                 case "2":
+                    Vaccination.VaccinationMethod();
+                    break;      
+                case "3":
                     return;   
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
