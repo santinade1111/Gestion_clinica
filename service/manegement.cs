@@ -311,36 +311,71 @@ namespace Gestion_clinica.service
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
-        
+
         // schedule appointment
-        public static void AgendarCitaPaciente()
+        public static void ScheduleAppointment()
         {
             Console.Clear();
-            Console.WriteLine("Agendar cita para paciente");
-            Console.Write("Ingrese el ID del paciente: ");
+            Console.WriteLine("Schedule appointment for patient");
+            Console.Write("Enter patient ID: ");
             var idInput = Console.ReadLine();
             if (!int.TryParse(idInput, out int patientId))
             {
-                Console.WriteLine("ID inválido. Presione Enter para continuar...");
+                Console.WriteLine("Invalid ID. Press Enter to continue...");
                 Console.ReadKey();
                 return;
             }
             if (!patientDict.TryGetValue(patientId, out var patient))
             {
-                Console.WriteLine("Paciente no encontrado. Presione Enter para continuar...");
+                Console.WriteLine("Patient not found. Press Enter to continue...");
                 Console.ReadKey();
                 return;
             }
-            Console.Write("Ingrese la fecha y hora de la cita (formato: dd/MM/yyyy HH:mm): ");
+            Console.Write("Enter the date and time of the appointment (format: dd/MM/yyyy HH:mm): ");
             var fechaInput = Console.ReadLine();
             if (!DateTime.TryParseExact(fechaInput, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime fecha))
             {
-                Console.WriteLine("Fecha inválida. Presione Enter para continuar...");
+                Console.WriteLine("Invalid date. Press Enter to continue...");
                 Console.ReadKey();
                 return;
             }
-            patient.AgendarCita(fecha);
-            Console.WriteLine("Presione Enter para continuar...");
+            patient.ScheduleAppointmentt(fecha);
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+        // Show appointments by patient ID
+        public static void ShowAppointmentsByPatientId()
+        {
+            Console.Clear();
+            Console.WriteLine("Show appointments of a patient by ID");
+            Console.Write("Enter patient ID: ");
+            var input = Console.ReadLine();
+            if (!int.TryParse(input, out int patientId))
+            {
+                Console.WriteLine("Invalid ID. Press Enter to continue...");
+                Console.ReadKey();
+                return;
+            }
+            if (!patientDict.TryGetValue(patientId, out var patient))
+            {
+                Console.WriteLine("Patient not found. Press Enter to continue...");
+                Console.ReadKey();
+                return;
+            }
+            if (patient.Appointments == null || patient.Appointments.Count == 0)
+            {
+                Console.WriteLine("The patient has no registered appointments.");
+            }
+            else
+            {
+                Console.WriteLine($"Appointments for {patient.Name}:");
+                foreach (var appointment in patient.Appointments)
+                {
+                    Console.WriteLine(appointment.ToString());
+                    patient.EnviarNotificacion($"Reminder for {appointment.Date:dd/MM/yyyy HH:mm}");
+                }
+            }
+            Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
     }

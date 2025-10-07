@@ -10,6 +10,7 @@ namespace Gestion_clinica.models
         private int phone;
         public string Address { get; set; }
         public List<Pet> Pets { get; set; }
+        public List<Appointment> Appointments { get; set; }
 
         public Patient(int id, string name, int age, int phone, string address)
         {
@@ -19,6 +20,7 @@ namespace Gestion_clinica.models
             this.phone = phone;
             Address = address;
             Pets = new List<Pet>();
+            Appointments = new List<Appointment>();
         }
 
         public void Register(Patient patient)
@@ -29,14 +31,22 @@ namespace Gestion_clinica.models
         // Implementación de INotificable
         public void EnviarNotificacion(string mensaje)
         {
-            Console.WriteLine($"[NOTIFICACIÓN] Para {Name}: {mensaje}");
+            Console.WriteLine($"[NOTIFICACIÓN] For {Name}: {mensaje}");
         }
 
         // Método para agendar cita y enviar recordatorio
-        public void AgendarCita(DateTime fecha)
+        public void ScheduleAppointmentt(DateTime fecha)
         {
-            Console.WriteLine($"Cita agendada para {Name} el {fecha:dd/MM/yyyy HH:mm}");
-            EnviarNotificacion($"Recordatorio de cita el {fecha:dd/MM/yyyy HH:mm}");
+            // Crear una cita y agregarla a la lista
+            var appointment = new Appointment(Appointments.Count + 1, Id, fecha, "Consulta médica", "Doctor asignado");
+            Appointments.Add(appointment);
+            Console.WriteLine($"Appointment for {Name} on {fecha:dd/MM/yyyy HH:mm}");
+        }    
+
+        // Método para agregar una cita
+        public void AddAppointment(Appointment appointment)
+        {
+            Appointments.Add(appointment);
         }
 
         public int Phone

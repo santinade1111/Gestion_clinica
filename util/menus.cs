@@ -9,10 +9,10 @@ class Menus
         {
             Console.Clear();
             Console.WriteLine(" --------- CLINICAL MANAGEMENT --------");
-            Console.WriteLine("1.Patient Consultation");
-            Console.WriteLine("2.Pets Consultation");
-            Console.WriteLine("3.General Consultation");
-            Console.WriteLine("4.go out");
+            Console.WriteLine("1. Patient Consultation");
+            Console.WriteLine("2. Pets Consultation");
+            Console.WriteLine("3. General Consultation");
+            Console.WriteLine("4. Exit");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -46,7 +46,7 @@ class Menus
             Console.WriteLine("2. See patients");
             Console.WriteLine("3. Search patient");
             Console.WriteLine("4. Remove Patient");
-            Console.WriteLine("5. go out");
+            Console.WriteLine("5. Exit");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -80,8 +80,8 @@ class Menus
         {
             Console.WriteLine(" ------- PETS MENU --------");
             Console.WriteLine("1. Add Pet to Patient");
-            Console.WriteLine("2. Vaccianation");
-            Console.WriteLine("3. salir");
+            Console.WriteLine("2. Vaccination");
+            Console.WriteLine("3. Exit");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -109,7 +109,8 @@ class Menus
         {
             Console.WriteLine("-------- GENERAL CONSULTATION --------");
             Console.WriteLine("1. Schedule appointment");
-            Console.WriteLine("2. salir");
+            Console.WriteLine("2. Show appointments of a patient by ID");
+            Console.WriteLine("3. Exit");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -117,9 +118,13 @@ class Menus
             switch (opcion)
             {
                 case "1":
-                    GestionPaciente.AgendarCitaPaciente();
+                    GestionPaciente.ScheduleAppointment();
                     break;
+
                 case "2":
+                    GestionPaciente.ShowAppointmentsByPatientId();
+                    break;
+                case "3":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
