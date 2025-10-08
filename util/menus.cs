@@ -8,11 +8,12 @@ class Menus
         while (true)
         {
             Console.Clear();
-            Console.WriteLine(" --------- CLINICAL MANAGEMENT --------");
+            Console.WriteLine(" ---- CLINICAL MANAGEMENT ---");
             Console.WriteLine("1. Patient Consultation");
             Console.WriteLine("2. Pets Consultation");
             Console.WriteLine("3. General Consultation");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("4. Veterinarian Management");
+            Console.WriteLine("5. Exit");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -28,7 +29,10 @@ class Menus
                     GeneralConsultationMenu();
                     break;
                 case "4":
-                    return;
+                    VeterinarianMenu();
+                    break;
+                 case "5" :
+                    return;  
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue....");
                     Console.ReadLine();
@@ -41,7 +45,7 @@ class Menus
     {
         while (true)
         {
-            Console.WriteLine("1. -------- PATIENT MENU -------");
+            Console.WriteLine("1. --- PATIENT MENU ---");
             Console.WriteLine("1. Register Patient");
             Console.WriteLine("2. See patients");
             Console.WriteLine("3. Search patient");
@@ -78,7 +82,7 @@ class Menus
     {
         while (true)
         {
-            Console.WriteLine(" ------- PETS MENU --------");
+            Console.WriteLine(" ----- PETS MENU -----");
             Console.WriteLine("1. Add Pet to Patient");
             Console.WriteLine("2. Vaccination");
             Console.WriteLine("3. Exit");
@@ -103,11 +107,38 @@ class Menus
         }
     }
 
+    public static void VeterinarianMenu()
+    {
+        while (true)
+        {
+            Console.WriteLine(" ----- VETERINARIAN MENU ----");
+            Console.WriteLine("1. Register Veterinarian");
+            Console.WriteLine("2. See Veterinarians");
+            Console.WriteLine("3. Exit");
+            Console.WriteLine("Select an option: ");
+            var opcion = Console.ReadLine();
+
+            switch (opcion)
+            {
+                case "1":
+                    GestionPaciente.RegisterVeterinarian();
+                    break;
+                case "3":
+                    return;
+                default:
+                    Console.WriteLine("Invalid option. Press Enter to continue....");
+                    Console.ReadLine();
+                    break;       
+    
+            }
+        }
+    }
+
     public static void GeneralConsultationMenu()
     {
         while (true)
         {
-            Console.WriteLine("-------- GENERAL CONSULTATION --------");
+            Console.WriteLine("----- GENERAL CONSULTATION ----");
             Console.WriteLine("1. Schedule appointment");
             Console.WriteLine("2. Show appointments of a patient by ID");
             Console.WriteLine("3. Exit");

@@ -4,12 +4,12 @@ namespace Gestion_clinica.service
 {
     public class GestionPaciente
     {
-        // Método para agendar cita a un paciente
-
         // List to store patients
         public static List<Patient> patients = new List<Patient>();
         // Dictionary for quick access by ID
         public static Dictionary<int, Patient> patientDict = new Dictionary<int, Patient>();
+        // List to store veterinarians
+        public static List<Veterinarian> veterinarians = new List<Veterinarian>();
         public static int nextId = 1;
 
         // Register a new patient
@@ -378,5 +378,30 @@ namespace Gestion_clinica.service
             Console.WriteLine("Press Enter to continue..");
             Console.ReadKey();
         }
+
+        // register a veterinarian
+        public static void RegisterVeterinarian()
+        {
+            Console.Clear();
+            Console.WriteLine("Register Veterinarian");
+            Console.Write("Enter ID: ");
+            var idInput = Console.ReadLine();
+            if (!int.TryParse(idInput, out int id))
+            {
+                Console.WriteLine("Invalid ID. Press Enter to continue...");
+                Console.ReadKey();
+                return;
+            }
+            Console.Write("Enter Name: ");
+            var name = Console.ReadLine();
+            Console.Write("Enter Specialty: ");
+            var specialty = Console.ReadLine();
+            var veterinarian = new Veterinarian(id, name, specialty);
+            veterinarians.Add(veterinarian);
+            Console.WriteLine("Veterinarian registered successfully.");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
     }
 }
+
