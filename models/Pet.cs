@@ -54,7 +54,7 @@ namespace Gestion_clinica.Interfaces
         {
             var vaccinationRecord = new VaccinationRecord(vaccineName, dateApplied);
             VaccinationHistory.Add(vaccinationRecord);
-            Console.WriteLine($"Vaccination '{vaccineName}' applied to {Name} on {vaccinationRecord.DateApplied:dd/MM/yyyy}");
+            Console.WriteLine($"Date of application of the '{vaccineName}' vaccine for the pet {Name}: {vaccinationRecord.DateApplied:dd/MM/yyyy}");
         }
 
         public void ShowVaccinationHistory()

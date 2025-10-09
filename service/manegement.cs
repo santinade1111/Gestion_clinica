@@ -43,7 +43,14 @@ namespace Gestion_clinica.service
                     var ageInput = Console.ReadLine();
                     if (int.TryParse(ageInput, out age))
                     {
-                        break;
+                        if (age >= 0 && age <= 130)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Age must be between 0 and 130 years. Please enter a valid age.");
+                        }
                     }
                     else
                     {
@@ -85,8 +92,8 @@ namespace Gestion_clinica.service
                 patients.Add(patient);
                 patientDict[patient.Id] = patient;
                 // Invoca el método Register de la interfaz
-                Console.WriteLine("Patient successfully registered. Press Enter to continue....");
                 patient.Register(patient);
+                Console.WriteLine("Patient successfully registered. Press Enter to continue....");
                 Console.ReadKey();
             }
             catch (Exception ex)
@@ -165,8 +172,15 @@ namespace Gestion_clinica.service
                 Console.Write("Pet age: ");
                 var petAgeInput = Console.ReadLine();
                 if (int.TryParse(petAgeInput, out petAge))
-                {
-                    break;
+                {                 
+                    if (petAge >= 0 && petAge <= 25)
+                    {
+                        break; 
+                    }
+                    else
+                    {
+                        Console.WriteLine("Pet age must be between 0 and 25 years. Please enter a valid age.");
+                    }
                 }
                 else
                 {
@@ -217,6 +231,34 @@ namespace Gestion_clinica.service
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
+
+        // View all pets with their information
+        public static void SeeAllPets()
+        {
+            Console.Clear();
+            Console.WriteLine("All Pets List");
+
+            // Recorrer todos los pacientes y sus mascotas
+            var allPets = patients.SelectMany(p => p.Pets).ToList();
+
+            if (allPets.Count == 0)
+            {
+                Console.WriteLine("No pets registered.");
+            }
+            else
+            {
+                foreach (var pet in allPets)
+                {
+                    Console.WriteLine($"Name: {pet.Name}, Age: {pet.Age}, Specie: {pet.Specie}, Race: {pet.Race}, Owner: {pet.Owner}");
+                    pet.ShowVaccinationHistory();
+                    Console.WriteLine("--------------------");
+                }
+            }
+
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
 
         // Delete a patient
         public static void RemovePatient()
@@ -295,19 +337,47 @@ namespace Gestion_clinica.service
                 Console.ReadKey();
                 return;
             }
-            var found = patients.Where(p => p.Name != null && p.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
+            var found = patients.Where(p => p.Name != null && p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).ToList();
 
             if (found.Count == 0)
             {
-                Console.WriteLine("No patients with that name were found..");
+                Console.WriteLine("No patients with that exact name were found..");
             }
             else
             {
                 foreach (var patient in found)
                 {
                     Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}, Age: {patient.Age}, Pets: {patient.Pets.Count}");
+
+                    // Enviar notificaciones de citas futuras (recordatorios)
+                    try
+                    {
+                        var upcomingAppointments = patient.Appointments?
+                            .Where(a => a.Date > DateTime.Now)
+                            .OrderBy(a => a.Date)
+                            .ToList();
+
+                        if (upcomingAppointments != null && upcomingAppointments.Count > 0)
+                        {
+                            foreach (var ap in upcomingAppointments)
+                            {
+                                string message = $"Recordatorio de cita: {ap.Date:dd/MM/yyy HH:MM} - {ap.Description}";
+                                patient.EnviarNotificacion(message);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"El paciente {patient.Name} no tiene citas próximas.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al enviar notificación: {ex.Message}");
+                    }
                 }
             }
+
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
@@ -388,7 +458,7 @@ namespace Gestion_clinica.service
                 appointment = new Appointment(patient.Appointments.Count + 1, patient.Id, fecha, "Consulta médica", "Doctor asignado");
             }
             patient.AddAppointment(appointment);
-            Console.WriteLine("Press Enter to continue...");
+            Console.WriteLine("Appointment scheduled. Press Enter to continue...");
             Console.ReadKey();
         }
         // Show appointments by patient ID
@@ -455,10 +525,24 @@ namespace Gestion_clinica.service
                 return;
             }
 
-            Console.Write("Enter Name: ");
-            var name = Console.ReadLine();
-            Console.Write("Enter Specialty: ");
-            var specialty = Console.ReadLine();
+            string name;
+            while (true)
+            {
+                Console.Write("Enter Name: ");
+                name = Console.ReadLine()?.Trim() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(name)) break;
+                Console.WriteLine("Name cannot be empty. Please enter a valid name.");
+            }
+
+            string specialty;
+            while (true)
+            {
+                Console.Write("Enter Specialty: ");
+                specialty = Console.ReadLine()?.Trim() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(specialty)) break;
+                Console.WriteLine("Specialty cannot be empty. Please enter a valid specialty.");
+            }
+
             var veterinarian = new Veterinarian(id, name, specialty);
             veterinarians.Add(veterinarian);
             veterinarian.Register(veterinarian);
@@ -469,7 +553,7 @@ namespace Gestion_clinica.service
 
         public static void SeeVeterinarians()
         {
-        
+
             Console.Clear();
             Console.WriteLine("Veterinarians List");
             if (veterinarians.Count == 0)

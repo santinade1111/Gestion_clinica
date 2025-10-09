@@ -12,7 +12,7 @@ namespace Gestion_clinica.service
             Console.ReadKey();
         }
 
-    public static void GeneralConsultationMethod()
+        public static void GeneralConsultationMethod()
         {
             var consulta = new GeneralConsultation();
             consulta.Attend();

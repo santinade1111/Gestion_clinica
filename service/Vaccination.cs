@@ -21,7 +21,7 @@ namespace Gestion_clinica.service
                 return;
             }
 
-            // search the pet in all patients
+            // Search the pet in all patients
             var foundPet = GestionPatient.patients
                 .SelectMany(p => p.Pets)
                 .FirstOrDefault(pet => pet.Name.Equals(petName, StringComparison.OrdinalIgnoreCase));
@@ -30,12 +30,46 @@ namespace Gestion_clinica.service
             {
                 Console.WriteLine($"Pet '{foundPet.Name}' found.");
 
+                // Check if there are any registered veterinarians
+                if (GestionPatient.veterinarians.Count == 0)
+                {
+                    Console.WriteLine("No veterinarians registered. Vaccination cannot proceed. Press Enter to continue...");
+                    Console.ReadKey();
+                    return;
+                }
+
+                // Ask for veterinarian ID
+                Console.WriteLine("Enter veterinarian ID:");
+                int vetId;
+                while (true)
+                {
+                    var vetIdInput = Console.ReadLine();
+                    if (int.TryParse(vetIdInput, out vetId))
+                    {
+                        var veterinarian = GestionPatient.veterinarians.FirstOrDefault(v => v.Id == vetId);
+                        if (veterinarian != null)
+                        {
+                            Console.WriteLine($"Veterinarian {veterinarian.Name} has been assigned to this vaccination.");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid veterinarian ID. Please try again.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid veterinarian ID.");
+                    }
+                }
+
+                // Enter vaccine name
                 Console.WriteLine("Enter vaccine name:");
                 string vaccineName = Console.ReadLine()?.Trim() ?? string.Empty;
 
                 if (string.IsNullOrWhiteSpace(vaccineName))
                 {
-                    Console.WriteLine("Vaccine name cannot be empty. Press enter to continue");
+                    Console.WriteLine("Vaccine name cannot be empty. Press enter to continue.");
                     Console.ReadKey();
                     return;
                 }
@@ -55,9 +89,8 @@ namespace Gestion_clinica.service
                     return;
                 }
 
-                // register the vaccination to pet with specified date
+                // Register the vaccination for the pet
                 foundPet.AddVaccination(vaccineName, dateApplied);
-                Console.WriteLine($"Vaccination '{vaccineName}' applied on {dateApplied:dd/MM/yyyy} successfully");
             }
             else
             {
@@ -66,6 +99,7 @@ namespace Gestion_clinica.service
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
+
 
         public static void VaccinationMethod()
         {

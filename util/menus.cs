@@ -80,7 +80,8 @@ class Menus
         {
             Console.WriteLine(" ----- PETS MENU -----");
             Console.WriteLine("1. Add Pet to Patient");
-            Console.WriteLine("2. Exit");
+            Console.WriteLine("2. See all pets");
+            Console.WriteLine("3. Exit");
             Console.Write("Select an option: ");
             var opcion = Console.ReadLine();
 
@@ -90,6 +91,9 @@ class Menus
                     GestionPatient.AddPetToPatient();
                     break;
                 case "2":
+                    GestionPatient.SeeAllPets();
+                    break;    
+                case "3":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press Enter to continue");
