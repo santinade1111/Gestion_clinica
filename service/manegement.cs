@@ -2,7 +2,7 @@ using Gestion_clinica.models;
 using Gestion_clinica.Interfaces;
 namespace Gestion_clinica.service
 {
-    public class GestionPaciente
+    public class GestionPatient
     {
         // List to store patients
         public static List<Patient> patients = new List<Patient>();
@@ -209,7 +209,7 @@ namespace Gestion_clinica.service
 
             var pet = new Pet(petName, petAge, petSpecie, petRace, petOwner);
             patient.Pets.Add(pet);
-            // Invoca el método Register de la interfaz
+            // Invokes the Register method of the interface
             Console.WriteLine("Sound:");
             pet.MakeSound();
             Console.WriteLine($"Pet '{petName}' added to patient {patient.Name}.");
@@ -339,7 +339,55 @@ namespace Gestion_clinica.service
                 Console.ReadKey();
                 return;
             }
-            patient.ScheduleAppointmentt(fecha);
+            // Ask for veterinarian to assign
+            Veterinarian? selectedVet = null;
+            if (veterinarians.Count == 0)
+            {
+                Console.WriteLine("No veterinarians registered. The appointment will be created without a veterinarian.");
+            }
+            else
+            {
+                Console.WriteLine("Available veterinarians:");
+                foreach (var vet in veterinarians)
+                {
+                    Console.WriteLine($"ID: {vet.Id}, Name: {vet.Name}, Specialty: {vet.Specialty}");
+                }
+
+                while (true)
+                {
+                    Console.Write("Enter veterinarian ID to assign (or press Enter to leave unassigned): ");
+                    var vetInput = Console.ReadLine();
+                    if (string.IsNullOrWhiteSpace(vetInput))
+                    {
+                        // leave unassigned
+                        break;
+                    }
+                    if (!int.TryParse(vetInput, out int vetId))
+                    {
+                        Console.WriteLine("Invalid ID. Please enter a valid integer or press Enter to skip.");
+                        continue;
+                    }
+                    selectedVet = veterinarians.FirstOrDefault(v => v.Id == vetId);
+                    if (selectedVet == null)
+                    {
+                        Console.WriteLine("No veterinarian found with that ID. Try again or press Enter to skip.");
+                        continue;
+                    }
+                    break;
+                }
+            }
+
+            // Create appointment and associate veterinarian if provided
+            Appointment appointment;
+            if (selectedVet != null)
+            {
+                appointment = new Appointment(patient.Appointments.Count + 1, patient.Id, fecha, "Consulta médica", selectedVet);
+            }
+            else
+            {
+                appointment = new Appointment(patient.Appointments.Count + 1, patient.Id, fecha, "Consulta médica", "Doctor asignado");
+            }
+            patient.AddAppointment(appointment);
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
@@ -392,13 +440,73 @@ namespace Gestion_clinica.service
                 Console.ReadKey();
                 return;
             }
+
+            if (id <= 0)
+            {
+                Console.WriteLine("ID must be a positive integer. Press Enter to continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            if (veterinarians.Any(v => v.Id == id))
+            {
+                Console.WriteLine("A veterinarian with that ID already exists. Press Enter to continue...");
+                Console.ReadKey();
+                return;
+            }
+
             Console.Write("Enter Name: ");
             var name = Console.ReadLine();
             Console.Write("Enter Specialty: ");
             var specialty = Console.ReadLine();
             var veterinarian = new Veterinarian(id, name, specialty);
             veterinarians.Add(veterinarian);
-            Console.WriteLine("Veterinarian registered successfully.");
+            veterinarian.Register(veterinarian);
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+
+        public static void SeeVeterinarians()
+        {
+        
+            Console.Clear();
+            Console.WriteLine("Veterinarians List");
+            if (veterinarians.Count == 0)
+            {
+                Console.WriteLine("There are no registered veterinarians.");
+            }
+            else
+            {
+                foreach (var veterinarian in veterinarians)
+                {
+                    Console.WriteLine($"ID: {veterinarian.Id}, Name: {veterinarian.Name}, Specialty: {veterinarian.Specialty}");
+                }
+            }
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadKey();
+        }
+
+        public static void ViewPetVaccinationHistory()
+        {
+            Console.Clear();
+            Console.WriteLine("View Pet Vaccination History");
+            Console.Write("Enter pet name: ");
+            string petName = Console.ReadLine()?.Trim() ?? string.Empty;
+
+            var foundPet = patients
+                .SelectMany(p => p.Pets)
+                .FirstOrDefault(pet => pet.Name.Equals(petName, StringComparison.OrdinalIgnoreCase));
+
+            if (foundPet != null)
+            {
+                foundPet.ShowVaccinationHistory();
+            }
+            else
+            {
+                Console.WriteLine($"Pet '{petName}' not found.");
+            }
+
             Console.WriteLine("Press Enter to continue...");
             Console.ReadKey();
         }
