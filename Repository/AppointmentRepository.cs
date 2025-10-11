@@ -1,4 +1,4 @@
-using models;
+using Gestion_clinica.models;
 
 public class AppointmentRepository : IAppointmentRepository
 {

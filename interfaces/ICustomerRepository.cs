@@ -1,3 +1,5 @@
+using Gestion_clinica.models;
+
 public interface ICustomerRepository
 {
     Customer GetById(int id);

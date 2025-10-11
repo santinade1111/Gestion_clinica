@@ -1,3 +1,5 @@
+using Gestion_clinica.models;
+
 public interface IPetRepository
 {
     Pet GetByName(string name);

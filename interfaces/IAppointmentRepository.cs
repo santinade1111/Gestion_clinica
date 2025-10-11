@@ -1,3 +1,4 @@
+using Gestion_clinica.models;
 public interface IAppointmentRepository
 {
     Appointment GetById(int id);

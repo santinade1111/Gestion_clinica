@@ -1,4 +1,4 @@
-using Gestion_clinica.Interfaces;
+using Gestion_clinica.models;
 namespace Gestion_clinica.models
 {
     public class Customer 

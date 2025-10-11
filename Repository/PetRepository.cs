@@ -1,3 +1,4 @@
+using Gestion_clinica.models;
 public class PetRepository : IPetRepository
 {
     private readonly List<Pet> _pets = new();

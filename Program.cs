@@ -1,9 +1,23 @@
-﻿using Gestion_clinica; 
+﻿using Gestion_clinica.models;
 
-class Program
+namespace Gestion_clinica
 {
-    static void Main(string[] args)
+    class Program
     {
-        Menus.Menu();
+        static void Main(string[] args)
+        {
+            // Crear las instancias de los repositorios
+            ICustomerRepository customerRepo = new CustomerRepository();
+            IPetRepository petRepo = new PetRepository();
+            IVeterinarianRepository vetRepo = new VeterinarianRepository();
+            IAppointmentRepository appointmentRepo = new AppointmentRepository();
+
+            // Crear el servicio de gestión
+            var managementService = new ManagementService(customerRepo, petRepo, vetRepo, appointmentRepo);
+
+            // Crear y mostrar el menú
+            var menu = new Menu(managementService);
+            menu.ShowMenu();
+        }
     }
 }

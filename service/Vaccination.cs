@@ -1,8 +1,5 @@
-using System;
-using System.Transactions;
-using Gestion_clinica;
-using Gestion_clinica.models;
 
+/*
 namespace Gestion_clinica.service
 {
     public class Vaccination : ServiceVeterinary
@@ -109,3 +106,4 @@ namespace Gestion_clinica.service
 
     }
 }
+*/

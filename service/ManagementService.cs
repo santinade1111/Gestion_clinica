@@ -1,28 +1,31 @@
+using Gestion_clinica.models;
+
 public class ManagementService
 {
     private readonly ICustomerRepository _customerRepo;
-    private readonly IPetRepository _petRepository;
+    private readonly IPetRepository _petRepo;
     private readonly IVeterinarianRepository _vetRepo;
     private readonly IAppointmentRepository _appointmentRepo;
 
     public ManagementService(ICustomerRepository customerRepo, IPetRepository petRepo, IVeterinarianRepository vetRepo, IAppointmentRepository appointmentRepo)
     {
         _customerRepo = customerRepo;
-        _petRepository = petRepo;
+        _petRepo = petRepo;
         _vetRepo = vetRepo;
         _appointmentRepo = appointmentRepo;
-        
     }
 
-    public void RegisterCustomer(int id string name, int age, string address)
+    // Registrar cliente: se genera un id internamente
+    public void RegisterCustomer(string name, int age, string address)
     {
-        var newCustomer = new Customer { Id = GenerateId(), Name = name, Age = age, Address = address, Pets = new List<Pet>(), Appointments = new List<Appointment>()};
+        var newCustomer = new Customer(GenerateId(), name, age, address);
         _customerRepo.Add(newCustomer);
     }
-
     public List<Customer> GetAllCustomers() => _customerRepo.GetAll();
+    public void UpdateCustomer(Customer customer) => _customerRepo.Update(customer);
+    public void DeleteCustomer(int id) => _customerRepo.Delete(id);
 
-     public void RegisterPet(string name, int age, string specie, string race, string ownerName)
+    public void RegisterPet(string name, int age, string specie, string race, string ownerName)
     {
         var pet = new Pet(name, age, specie, race, ownerName);
         _petRepo.Add(pet);
@@ -35,8 +38,9 @@ public class ManagementService
             _customerRepo.Update(owner);
         }
     }
-
     public List<Pet> GetAllPets() => _petRepo.GetAll();
+    public void UpdatePet(Pet pet) => _petRepo.Update(pet);
+    public void DeletePet(string name) => _petRepo.Delete(name);
 
     // Veterinarian
     public void RegisterVeterinarian(int id, string name, string specialty)
@@ -44,8 +48,9 @@ public class ManagementService
         var vet = new Veterinarian(id, name, specialty);
         _vetRepo.Add(vet);
     }
-
     public List<Veterinarian> GetAllVeterinarians() => _vetRepo.GetAll();
+    public void UpdateVeterinarian(Veterinarian vet) => _vetRepo.Update(vet);
+    public void DeleteVeterinarian(int id) => _vetRepo.Delete(id);
 
     // Appointment
     public void ScheduleAppointment(int id, int customerId, DateTime date, string description, int vetId)
@@ -62,9 +67,10 @@ public class ManagementService
             _customerRepo.Update(customer);
         }
     }
-
     public List<Appointment> GetAllAppointments() => _appointmentRepo.GetAll();
-
+    public void UpdateAppointment(Appointment appointment) => _appointmentRepo.Update(appointment);
+    public void DeleteAppointment(int id) => _appointmentRepo.Delete(id);
+    
     private int GenerateId()
     {
         return _customerRepo.GetAll().Count + 1;

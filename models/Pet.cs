@@ -1,5 +1,5 @@
-using Gestion_clinica.models;
-namespace Gestion_clinica.Interfaces
+namespace Gestion_clinica.models
+
 {
     public class Pet : Animal
     {

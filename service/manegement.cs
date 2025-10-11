@@ -1,4 +1,5 @@
-using Gestion_clinica.models;
+
+/*using Gestion_clinica.models;
 using Gestion_clinica.Interfaces;
 namespace Gestion_clinica.service
 {
@@ -596,4 +597,4 @@ namespace Gestion_clinica.service
         }
     }
 }
-
+*/
