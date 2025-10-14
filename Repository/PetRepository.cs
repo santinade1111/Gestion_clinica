@@ -11,14 +11,18 @@ public class PetRepository : IPetRepository
         _pets.Add(pet);
     }
 
-    public void Delete(string name)
+    public void Delete(int id)
     {
-        var pet = GetByName(name);
+        var pet = _pets.FirstOrDefault(p => p.Id == id);
         if (pet != null)
-        {
             _pets.Remove(pet);
-        }
     }
+
+    public bool PetExists(int id)
+    {
+        return _pets.Any(p => p.Id == id);
+    }
+
 
     public List<Pet> GetAll() => _pets;
 
@@ -26,9 +30,10 @@ public class PetRepository : IPetRepository
 
     public void Update(Pet pet)
     {
-        var existing = GetByName(pet.Name);
+        var existing = _pets.FirstOrDefault(p => p.Id == pet.Id);
         if (existing != null)
         {
+            existing.Name = pet.Name;
             existing.Age = pet.Age;
             existing.Specie = pet.Specie;
             existing.Race = pet.Race;

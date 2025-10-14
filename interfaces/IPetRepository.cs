@@ -6,6 +6,6 @@ public interface IPetRepository
     List<Pet> GetAll();
     void Add(Pet pet);
     void Update(Pet pet);
-    void Delete(string name);
+    void Delete(int id);
     Pet? GetById(int id);
 }

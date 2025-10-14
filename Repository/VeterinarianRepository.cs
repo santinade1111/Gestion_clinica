@@ -3,9 +3,11 @@ using Gestion_clinica.models;
 public class VeterinarianRepository : IVeterinarianRepository
 {
     private readonly List<Veterinarian> _vets = new();
+    private int _nextId = 1;
 
     public void Add(Veterinarian vet)
     {
+        vet.Id = _nextId++;
         _vets.Add(vet);
     }
 
@@ -31,4 +33,5 @@ public class VeterinarianRepository : IVeterinarianRepository
             existing.Specialty = vet.Specialty;
         }
     }
+    public bool VeterinarianExists(int id) => _vets.Any(v => v.Id == id);
 }

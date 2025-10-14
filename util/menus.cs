@@ -247,7 +247,6 @@ namespace Gestion_clinica
         {
             var customers = _managementService.GetAllCustomers();
 
-            // ✅ Validar si no hay ningún cliente
             if (customers == null || !customers.Any())
             {
                 Console.WriteLine("⚠️ No hay clientes registrados en el sistema.");
@@ -255,15 +254,28 @@ namespace Gestion_clinica
             else
             {
                 Console.WriteLine("📋 Lista de clientes registrados:\n");
+
                 foreach (var customer in customers)
                 {
-                    Console.WriteLine($"ID: {customer.Id}, Nombre: {customer.Name}, Edad: {customer.Age}, Dirección: {customer.Address}");
+                    int petCount = _managementService.GetPetCountByCustomer(customer.Id);
+
+                    Console.WriteLine($"ID: {customer.Id} | Nombre: {customer.Name} | Edad: {customer.Age} | Dirección: {customer.Address} | 🐾 Mascotas: {petCount}");
+                    if (customer.Appointments.Any())
+                    {
+                        Console.WriteLine("  📅 Citas agendadas:");
+                        foreach (var appointment in customer.Appointments)
+                        {
+                            Console.WriteLine($"     - {appointment}");
+                        }
+                    }
+                    Console.WriteLine();
                 }
             }
 
             Console.WriteLine("\nPresione cualquier tecla para volver al menú.");
             Console.ReadKey();
         }
+
 
 
         private void UpdateCustomer()
@@ -427,9 +439,17 @@ namespace Gestion_clinica
         private void ShowAllPets()
         {
             var pets = _managementService.GetAllPets();
-            foreach (var pet in pets)
+            if (pets == null || !pets.Any())
             {
-                Console.WriteLine($"Nombre: {pet.Name}, Especie: {pet.Specie}, Raza: {pet.Race}, Dueño: {pet.Id}");
+                Console.WriteLine("⚠️ No hay mascotas registradas en el sistema.");
+            }
+            else
+            {
+                Console.WriteLine("📋 Lista de mascotass registrados:\n");
+                foreach (var pet in pets)
+                {
+                    Console.WriteLine($"Nombre: {pet.Name}, Especie: {pet.Specie}, Raza: {pet.Race}, Id: {pet.Id}");
+                }
             }
             Console.WriteLine("Presione cualquier tecla para volver al menú.");
             Console.ReadKey();
@@ -528,44 +548,57 @@ namespace Gestion_clinica
 
         private void DeletePet()
         {
-            Console.WriteLine("Ingrese el nombre de la mascota a eliminar:");
-            string? name = Console.ReadLine()?.Trim(); // ← Puede ser null, por eso usamos string?
+            Console.WriteLine("Ingrese el ID de la mascota a eliminar:");
+            string? idInput = Console.ReadLine()?.Trim();
 
-            if (string.IsNullOrWhiteSpace(name))
+            // --- Validar ID ---
+            if (string.IsNullOrWhiteSpace(idInput) || !int.TryParse(idInput, out int petId) || petId <= 0)
             {
-                Console.WriteLine("❌ El nombre de la mascota no puede estar vacío. Operación cancelada.");
+                Console.WriteLine("❌ ID inválido. Debe ser un número entero positivo. Operación cancelada.");
                 Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
 
-            _managementService.DeletePet(name);
+            // --- Validar si la mascota existe ---
+            if (!_managementService.PetExists(petId))
+            {
+                Console.WriteLine($"⚠️ No existe ninguna mascota con el ID {petId}. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // --- Confirmación antes de eliminar ---
+            Console.WriteLine($"¿Está seguro de que desea eliminar la mascota con ID {petId}? (S/N)");
+            string? confirm = Console.ReadLine()?.Trim().ToUpper();
+
+            if (confirm != "S")
+            {
+                Console.WriteLine("❎ Operación cancelada por el usuario.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // --- Eliminación ---
+            _managementService.DeletePet(petId);
             Console.WriteLine("✅ Mascota eliminada con éxito.");
             Console.WriteLine("Presione Enter para continuar...");
             Console.ReadLine();
         }
 
 
+
         private void RegisterVeterinarian()
         {
-            Console.WriteLine("Ingrese el ID del veterinario:");
-            string? idInput = Console.ReadLine();
-
-            // Validar que el ID sea un número válido
-            if (!int.TryParse(idInput, out int id))
-            {
-                Console.WriteLine("❌ El ID ingresado no es válido. Operación cancelada.");
-                Console.WriteLine("Presione Enter para continuar...");
-                Console.ReadLine();
-                return;
-            }
-
             Console.WriteLine("Ingrese el nombre del veterinario:");
             string? name = Console.ReadLine()?.Trim();
 
             if (string.IsNullOrWhiteSpace(name))
             {
                 Console.WriteLine("❌ El nombre no puede estar vacío. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
@@ -576,11 +609,12 @@ namespace Gestion_clinica
             if (string.IsNullOrWhiteSpace(specialty))
             {
                 Console.WriteLine("❌ La especialidad no puede estar vacía. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
 
-            _managementService.RegisterVeterinarian(id, name, specialty);
+            _managementService.RegisterVeterinarian(name, specialty);
             Console.WriteLine("✅ Veterinario registrado con éxito.");
             Console.WriteLine("Presione Enter para continuar...");
             Console.ReadLine();
@@ -590,23 +624,42 @@ namespace Gestion_clinica
         private void ShowAllVeterinarians()
         {
             var vets = _managementService.GetAllVeterinarians();
+
+            if (vets == null || !vets.Any())
+            {
+                Console.WriteLine("⚠️ No hay veterinarios registrados actualmente.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            Console.WriteLine("\n📋 Lista de Veterinarios Registrados:");
             foreach (var vet in vets)
             {
-                Console.WriteLine($"ID: {vet.Id}, Nombre: {vet.Name}, Especialidad: {vet.Specialty}");
+                Console.WriteLine($"ID: {vet.Id} | Nombre: {vet.Name} | Especialidad: {vet.Specialty}");
             }
-            Console.WriteLine("Presione cualquier tecla para volver al menú.");
+
+            Console.WriteLine("\nPresione cualquier tecla para volver al menú...");
             Console.ReadKey();
         }
 
         private void UpdateVeterinarian()
         {
             Console.WriteLine("Ingrese el ID del veterinario a actualizar:");
-            string? idInput = Console.ReadLine();
+            string? idInput = Console.ReadLine()?.Trim();
 
-            // Validar que el ID sea numérico
-            if (!int.TryParse(idInput, out int id))
+            if (string.IsNullOrWhiteSpace(idInput) || !int.TryParse(idInput, out int id) || id <= 0)
             {
-                Console.WriteLine("❌ El ID ingresado no es válido. Operación cancelada.");
+                Console.WriteLine("❌ ID inválido. Debe ser un número entero positivo. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // Verificar si el veterinario existe
+            if (!_managementService.VeterinarianExists(id))
+            {
+                Console.WriteLine($"⚠️ No existe ningún veterinario con el ID {id}. Operación cancelada.");
                 Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
@@ -618,6 +671,7 @@ namespace Gestion_clinica
             if (string.IsNullOrWhiteSpace(name))
             {
                 Console.WriteLine("❌ El nombre no puede estar vacío. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
@@ -628,6 +682,7 @@ namespace Gestion_clinica
             if (string.IsNullOrWhiteSpace(specialty))
             {
                 Console.WriteLine("❌ La especialidad no puede estar vacía. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
@@ -635,9 +690,7 @@ namespace Gestion_clinica
             // Crear objeto actualizado
             var updatedVet = new Veterinarian(id, name, specialty);
 
-            // Llamar al servicio
             _managementService.UpdateVeterinarian(updatedVet);
-
             Console.WriteLine("✅ Veterinario actualizado con éxito.");
             Console.WriteLine("Presione Enter para continuar...");
             Console.ReadLine();
@@ -647,32 +700,40 @@ namespace Gestion_clinica
         private void DeleteVeterinarian()
         {
             Console.WriteLine("Ingrese el ID del veterinario a eliminar:");
-            string? idInput = Console.ReadLine();
+            string? idInput = Console.ReadLine()?.Trim();
 
-            // Validar que el ID no sea nulo o vacío y que sea numérico
-            if (!int.TryParse(idInput, out int id))
+            if (string.IsNullOrWhiteSpace(idInput) || !int.TryParse(idInput, out int id) || id <= 0)
             {
-                Console.WriteLine("❌ El ID ingresado no es válido. Operación cancelada.");
+                Console.WriteLine("❌ ID inválido. Debe ser un número entero positivo. Operación cancelada.");
                 Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
 
-            // Confirmar eliminación (opcional pero buena práctica)
-            Console.WriteLine($"¿Está seguro de que desea eliminar al veterinario con ID {id}? (s/n)");
-            string? confirm = Console.ReadLine()?.Trim().ToLower();
-
-            if (confirm != "s")
+            // Verificar existencia del veterinario
+            if (!_managementService.VeterinarianExists(id))
             {
-                Console.WriteLine("Operación cancelada por el usuario.");
+                Console.WriteLine($"⚠️ No existe ningún veterinario con el ID {id}. Operación cancelada.");
                 Console.WriteLine("Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
 
-            // Llamar al servicio de eliminación
+            // Mostrar detalles antes de eliminar (opcional)
+            var vet = _managementService.GetVeterinarianById(id);
+            Console.WriteLine($"Veterinario encontrado: {vet.Name} ({vet.Specialty})");
+            Console.WriteLine($"¿Está seguro de que desea eliminar al veterinario con ID {id}? (S/N)");
+            string? confirm = Console.ReadLine()?.Trim().ToUpper();
+
+            if (confirm != "S")
+            {
+                Console.WriteLine("❎ Operación cancelada por el usuario.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
             _managementService.DeleteVeterinarian(id);
-
             Console.WriteLine("✅ Veterinario eliminado con éxito.");
             Console.WriteLine("Presione Enter para continuar...");
             Console.ReadLine();
@@ -776,30 +837,87 @@ namespace Gestion_clinica
         private void UpdateAppointment()
         {
             Console.WriteLine("Ingrese el ID de la cita a actualizar:");
-            int id = int.Parse(Console.ReadLine() ?? "0");
+            string? idInput = Console.ReadLine();
 
-            Console.WriteLine("Ingrese el ID del cliente:");
-            int customerId = int.Parse(Console.ReadLine() ?? "0");
+            // Validar ID
+            if (!int.TryParse(idInput, out int id))
+            {
+                Console.WriteLine("❌ El ID ingresado no es válido. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // Verificar si la cita existe
+            var existingAppointment = _managementService.GetAllAppointments().FirstOrDefault(a => a.Id == id);
+            if (existingAppointment == null)
+            {
+                Console.WriteLine("❌ No existe ninguna cita con ese ID.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            Console.WriteLine("Ingrese el nuevo ID del cliente:");
+            string? customerInput = Console.ReadLine();
+            if (!int.TryParse(customerInput, out int customerId))
+            {
+                Console.WriteLine("❌ El ID del cliente no es válido. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
 
             Console.WriteLine("Ingrese la nueva fecha de la cita (formato: dd/MM/yyyy HH:mm):");
             string? dateInput = Console.ReadLine();
-            DateTime date = DateTime.TryParse(dateInput, out DateTime parsedDate)
-                ? parsedDate
-                : DateTime.Now;
+
+            if (!DateTime.TryParseExact(dateInput, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime date))
+            {
+                Console.WriteLine("❌ Fecha inválida. Use el formato dd/MM/yyyy HH:mm. Ejemplo: 14/10/2025 15:00");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
 
             Console.WriteLine("Ingrese la nueva descripción de la cita:");
-            string description = Console.ReadLine() ?? "Sin descripción";
+            string? description = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                Console.WriteLine("❌ La descripción no puede estar vacía. Operación cancelada.");
+                Console.ReadLine();
+                return;
+            }
 
             Console.WriteLine("Ingrese el nuevo ID del veterinario:");
-            int vetId = int.Parse(Console.ReadLine() ?? "0");
-            var veterinarian = new Veterinarian { Id = vetId };
+            string? vetInput = Console.ReadLine();
+
+            if (!int.TryParse(vetInput, out int vetId))
+            {
+                Console.WriteLine("❌ El ID del veterinario no es válido. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // Obtener veterinario desde el servicio (por si queremos validar que exista)
+            var veterinarian = _managementService.GetAllVeterinarians().FirstOrDefault(v => v.Id == vetId);
+            if (veterinarian == null)
+            {
+                Console.WriteLine("❌ No existe ningún veterinario con ese ID. Operación cancelada.");
+                Console.ReadLine();
+                return;
+            }
 
             var updatedAppointment = new Appointment(id, customerId, date, description, veterinarian);
 
-
             _managementService.UpdateAppointment(updatedAppointment);
-            Console.WriteLine("¡Cita actualizada con éxito!");
+
+            Console.WriteLine("✅ Cita actualizada con éxito.");
+            Console.WriteLine("Presione Enter para continuar...");
+            Console.ReadLine();
         }
+
 
 
         private void DeleteAppointment()
@@ -809,13 +927,41 @@ namespace Gestion_clinica
 
             if (!int.TryParse(input, out int id))
             {
-                Console.WriteLine("ID inválido. Operación cancelada.");
+                Console.WriteLine("❌ ID inválido. Operación cancelada.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // Verificar si la cita existe antes de eliminar
+            var existingAppointment = _managementService.GetAllAppointments().FirstOrDefault(a => a.Id == id);
+            if (existingAppointment == null)
+            {
+                Console.WriteLine("❌ No existe ninguna cita con ese ID.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // Confirmar eliminación
+            Console.WriteLine($"⚠️ ¿Está seguro de que desea eliminar la cita con ID {id}? (s/n)");
+            string? confirm = Console.ReadLine()?.Trim().ToLower();
+
+            if (confirm != "s")
+            {
+                Console.WriteLine("Operación cancelada por el usuario.");
+                Console.WriteLine("Presione Enter para continuar...");
+                Console.ReadLine();
                 return;
             }
 
             _managementService.DeleteAppointment(id);
-            Console.WriteLine("¡Cita eliminada con éxito!");
+
+            Console.WriteLine("✅ Cita eliminada con éxito.");
+            Console.WriteLine("Presione Enter para continuar...");
+            Console.ReadLine();
         }
+
 
 
     }

@@ -8,7 +8,7 @@ namespace Gestion_clinica.models
         public int Age { get; set; }
         public string Address { get; set; }
         public List<Pet> Pets { get; set; }
-        public List<Appointment> Appointments { get; set; }
+        public List<Appointment> Appointments { get; set; } = new();
 
         public Customer(int id, string name, int age, string address)
         {

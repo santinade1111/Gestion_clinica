@@ -48,13 +48,30 @@ public class ManagementService
     {
         return _petRepo.GetById(id) != null;
     }
-    public void DeletePet(string name) => _petRepo.Delete(name);
+    public void DeletePet(int id)
+    {
+        _petRepo.Delete(id);
+    }
+    public int GetPetCountByCustomer(int customerId)
+    {
+        var allPets = _petRepo.GetAll();
+        return allPets.Count(p => p.OwnerId == customerId);
+    }
+
 
     // Veterinarian
-    public void RegisterVeterinarian(int id, string name, string specialty)
+    public void RegisterVeterinarian(string name, string specialty)
     {
-        var vet = new Veterinarian(id, name, specialty);
+        var vet = new Veterinarian(name, specialty);
         _vetRepo.Add(vet);
+    }
+    public bool VeterinarianExists(int id)
+    {
+        return _vetRepo.VeterinarianExists(id);
+    }
+    public Veterinarian? GetVeterinarianById(int id)
+    {
+        return _vetRepo.GetById(id);
     }
     public List<Veterinarian> GetAllVeterinarians() => _vetRepo.GetAll();
     public void UpdateVeterinarian(Veterinarian vet) => _vetRepo.Update(vet);
@@ -63,21 +80,55 @@ public class ManagementService
     // Appointment
     public void ScheduleAppointment(int id, int customerId, DateTime date, string description, int vetId)
     {
+        var customer = _customerRepo.GetById(customerId);
+        if (customer == null)
+        {
+            Console.WriteLine("❌ No se encontró el cliente con ese ID.");
+            return;
+        }
+
         var vet = _vetRepo.GetById(vetId);
+        if (vet == null)
+        {
+            Console.WriteLine("❌ No se encontró el veterinario con ese ID.");
+            return;
+        }
+
         var appointment = new Appointment(id, customerId, date, description, vet);
 
+        // Guardar en repositorio principal
         _appointmentRepo.Add(appointment);
 
-        var customer = _customerRepo.GetById(customerId);
-        if (customer != null)
-        {
-            customer.Appointments.Add(appointment);
-            _customerRepo.Update(customer);
-        }
+        // Asociar la cita al cliente
+        customer.Appointments.Add(appointment);
+        _customerRepo.Update(customer);
+
+        // (Opcional) Si quieres también mantener citas del veterinario
+        vet.Appointments.Add(appointment);
+        _vetRepo.Update(vet);
     }
+
     public List<Appointment> GetAllAppointments() => _appointmentRepo.GetAll();
     public void UpdateAppointment(Appointment appointment) => _appointmentRepo.Update(appointment);
-    public void DeleteAppointment(int id) => _appointmentRepo.Delete(id);
+    public void DeleteAppointment(int id)
+    {
+        var appointment = _appointmentRepo.GetById(id);
+        if (appointment == null) return;
+
+        // Eliminar del cliente
+        var customer = _customerRepo.GetById(appointment.CustomerId);
+        customer?.Appointments.RemoveAll(a => a.Id == id);
+        if (customer != null) _customerRepo.Update(customer);
+
+        // Eliminar del veterinario
+        var vet = appointment.Veterinarian;
+        vet?.Appointments.RemoveAll(a => a.Id == id);
+        if (vet != null) _vetRepo.Update(vet);
+
+        // Finalmente, eliminar del repositorio principal
+        _appointmentRepo.Delete(id);
+    }
+
 
     private int GenerateId()
     {

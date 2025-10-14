@@ -7,4 +7,6 @@ public interface IVeterinarianRepository
     void Add(Veterinarian vet);
     void Update(Veterinarian vet);
     void Delete(int id);
+    bool VeterinarianExists(int id);
+    
 }
