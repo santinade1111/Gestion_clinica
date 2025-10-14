@@ -3,8 +3,11 @@ public class PetRepository : IPetRepository
 {
     private readonly List<Pet> _pets = new();
 
+    private int _nextId = 1;
+
     public void Add(Pet pet)
     {
+        pet.Id = _nextId++;
         _pets.Add(pet);
     }
 
@@ -29,7 +32,12 @@ public class PetRepository : IPetRepository
             existing.Age = pet.Age;
             existing.Specie = pet.Specie;
             existing.Race = pet.Race;
-            existing.Owner = pet.Owner;
+            existing.OwnerId = pet.OwnerId;
         }
+    }
+
+    public Pet? GetById(int id)
+    {
+        return _pets.FirstOrDefault(p => p.Id == id);
     }
 }

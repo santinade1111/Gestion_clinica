@@ -357,6 +357,25 @@ namespace Gestion_clinica
 
         private void RegisterPet()
         {
+            // --- ID del dueño ---
+            Console.WriteLine("Ingrese el ID del dueño de la mascota:");
+            string? idInput = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(idInput) || !int.TryParse(idInput, out int ownerId) || ownerId <= 0)
+            {
+                Console.WriteLine("❌ ID inválido. Debe ser un número entero positivo. Operación cancelada. Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // ✅ Verificar si el cliente (dueño) existe
+            if (!_managementService.CustomerExists(ownerId))
+            {
+                Console.WriteLine($"⚠️ No existe ningún cliente con el ID {ownerId}. No se puede registrar la mascota. Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
             // --- Nombre ---
             Console.WriteLine("Ingrese el nombre de la mascota:");
             string? name = Console.ReadLine()?.Trim();
@@ -397,21 +416,12 @@ namespace Gestion_clinica
                 return;
             }
 
-            // --- Dueño ---
-            Console.WriteLine("Ingrese el nombre del dueño de la mascota:");
-            string? owner = Console.ReadLine()?.Trim();
-            if (string.IsNullOrWhiteSpace(owner))
-            {
-                Console.WriteLine("❌ El nombre del dueño no puede estar vacío. Operación cancelada. Presione Enter para continuar...");
-                Console.ReadLine();
-                return;
-            }
-
             // --- Registro ---
-            _managementService.RegisterPet(name, age, specie, race, owner);
+            _managementService.RegisterPet(name, age, specie, race, ownerId);
             Console.WriteLine("✅ Mascota registrada con éxito. Presione Enter para continuar...");
             Console.ReadLine();
         }
+
 
 
         private void ShowAllPets()
@@ -419,7 +429,7 @@ namespace Gestion_clinica
             var pets = _managementService.GetAllPets();
             foreach (var pet in pets)
             {
-                Console.WriteLine($"Nombre: {pet.Name}, Especie: {pet.Specie}, Raza: {pet.Race}, Dueño: {pet.Owner}");
+                Console.WriteLine($"Nombre: {pet.Name}, Especie: {pet.Specie}, Raza: {pet.Race}, Dueño: {pet.Id}");
             }
             Console.WriteLine("Presione cualquier tecla para volver al menú.");
             Console.ReadKey();
@@ -427,12 +437,30 @@ namespace Gestion_clinica
 
         private void UpdatePet()
         {
+            // --- ID de la mascota ---
+            Console.WriteLine("Ingrese el ID de la mascota a actualizar:");
+            string? idInput = Console.ReadLine()?.Trim();
+            if (string.IsNullOrWhiteSpace(idInput) || !int.TryParse(idInput, out int petId) || petId <= 0)
+            {
+                Console.WriteLine("❌ ID inválido. Operación cancelada. Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // --- Validar si la mascota existe ---
+            if (!_managementService.PetExists(petId))
+            {
+                Console.WriteLine($"⚠️ No existe ninguna mascota con el ID {petId}. Operación cancelada. Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
             // --- Nombre ---
-            Console.WriteLine("Ingrese el nombre de la mascota a actualizar:");
+            Console.WriteLine("Ingrese el nuevo nombre de la mascota:");
             string? name = Console.ReadLine()?.Trim();
             if (string.IsNullOrWhiteSpace(name))
             {
-                Console.WriteLine("❌ El nombre de la mascota no puede estar vacío. Operación cancelada. Presione Enter para continuar...");
+                Console.WriteLine("❌ El nombre no puede estar vacío. Operación cancelada. Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
@@ -467,22 +495,35 @@ namespace Gestion_clinica
                 return;
             }
 
-            // --- Dueño ---
-            Console.WriteLine("Ingrese el nuevo nombre del dueño de la mascota:");
-            string? owner = Console.ReadLine()?.Trim();
-            if (string.IsNullOrWhiteSpace(owner))
+            // --- ID del dueño ---
+            Console.WriteLine("Ingrese el ID del dueño de la mascota:");
+            string? ownerIdInput = Console.ReadLine()?.Trim();
+            if (string.IsNullOrWhiteSpace(ownerIdInput) || !int.TryParse(ownerIdInput, out int ownerId) || ownerId <= 0)
             {
-                Console.WriteLine("❌ El nombre del dueño no puede estar vacío. Operación cancelada. Presione Enter para continuar...");
+                Console.WriteLine("❌ ID de dueño inválido. Operación cancelada. Presione Enter para continuar...");
+                Console.ReadLine();
+                return;
+            }
+
+            // ✅ Verificar si el dueño existe
+            if (!_managementService.CustomerExists(ownerId))
+            {
+                Console.WriteLine($"⚠️ No existe ningún cliente con el ID {ownerId}. Operación cancelada. Presione Enter para continuar...");
                 Console.ReadLine();
                 return;
             }
 
             // --- Actualización ---
-            var updatedPet = new Pet(name, age, specie, race, owner);
+            var updatedPet = new Pet(name, age, specie, race, ownerId)
+            {
+                Id = petId // 👈 importante: mantener el ID original de la mascota
+            };
+
             _managementService.UpdatePet(updatedPet);
             Console.WriteLine("✅ Mascota actualizada con éxito. Presione Enter para continuar...");
             Console.ReadLine();
         }
+
 
 
         private void DeletePet()

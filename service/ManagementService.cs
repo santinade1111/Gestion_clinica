@@ -29,13 +29,13 @@ public class ManagementService
     }
     public void DeleteCustomer(int id) => _customerRepo.Delete(id);
 
-    public void RegisterPet(string name, int age, string specie, string race, string ownerName)
+    public void RegisterPet(string name, int age, string specie, string race, int ownerId)
     {
-        var pet = new Pet(name, age, specie, race, ownerName);
+        var pet = new Pet(name, age, specie, race, ownerId);
         _petRepo.Add(pet);
 
         // Vincular con el cliente dueño
-        var owner = _customerRepo.GetAll().FirstOrDefault(c => c.Name.Equals(ownerName, StringComparison.OrdinalIgnoreCase));
+        var owner = _customerRepo.GetAll().FirstOrDefault(c => c.Name.Equals(StringComparison.OrdinalIgnoreCase));
         if (owner != null)
         {
             owner.Pets.Add(pet);
@@ -44,6 +44,10 @@ public class ManagementService
     }
     public List<Pet> GetAllPets() => _petRepo.GetAll();
     public void UpdatePet(Pet pet) => _petRepo.Update(pet);
+    public bool PetExists(int id)
+    {
+        return _petRepo.GetById(id) != null;
+    }
     public void DeletePet(string name) => _petRepo.Delete(name);
 
     // Veterinarian
