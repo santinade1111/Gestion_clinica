@@ -23,6 +23,10 @@ public class ManagementService
     }
     public List<Customer> GetAllCustomers() => _customerRepo.GetAll();
     public void UpdateCustomer(Customer customer) => _customerRepo.Update(customer);
+    public bool CustomerExists(int id)
+    {
+        return _customerRepo.GetById(id) != null;
+    }
     public void DeleteCustomer(int id) => _customerRepo.Delete(id);
 
     public void RegisterPet(string name, int age, string specie, string race, string ownerName)
@@ -70,7 +74,7 @@ public class ManagementService
     public List<Appointment> GetAllAppointments() => _appointmentRepo.GetAll();
     public void UpdateAppointment(Appointment appointment) => _appointmentRepo.Update(appointment);
     public void DeleteAppointment(int id) => _appointmentRepo.Delete(id);
-    
+
     private int GenerateId()
     {
         return _customerRepo.GetAll().Count + 1;
